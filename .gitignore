@@ -1,4 +1,19 @@
-/clips
-/bower_components
-/.idea
-/.DS_Store
+# Compiled object files
+*.o
+
+# Executable files
+*.exe
+*.out
+media_to_ascii
+
+# Dependency files
+*.d
+
+# IDE specific files
+.vscode/
+.idea/
+build/
+
+# Compiled libraries
+*.so
+*.a
