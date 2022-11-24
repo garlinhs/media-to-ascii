@@ -14,8 +14,9 @@ C++ program that converts media files such .mp4 into ASCII characters.
 Before getting started with media-to-ascii, ensure that you have the following dependencies installed on your Linux system:
 
 - **g++ compiler**
+- **CMake**
 - **OpenCV 4**
-- **nCurses library**
+- **nCurses 6**
 
 ### Installation
 To use media-to-ascii, follow these steps
@@ -30,10 +31,13 @@ cd media-to-ascii
 
 3. Compile the project with **make**:
 ```Bash
-make
+mkdir build
+cd build
+cmake ..
+cmake --build .
 ```
 
-4. Now you will see the executable **converter** and you can execute the program
+4. Now you will see the executable **media_to_ascii** and you can execute the program
 ```Bash
 ./media_to_ascii
 ```
