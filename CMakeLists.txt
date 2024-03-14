@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(media_to_ascii VERSION 1.0.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-error=unused-result -pedantic -march=native -O3 -ffast-math -Wno-stringop-overflow")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-error=unused-result -Wno-error=sign-compare -pedantic -march=native -O3 -ffast-math -Wno-stringop-overflow")
 
 find_package(OpenCV 4 REQUIRED)
 find_package(Curses REQUIRED)
@@ -31,6 +31,7 @@ add_executable(
     src/menu.cpp
     src/audio.cpp
     src/helper.cpp
+    src/sarge.cpp
 )
 
 target_compile_options(media_to_ascii PRIVATE "-std=c++17" "-Werror")

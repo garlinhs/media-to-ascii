@@ -5,6 +5,7 @@
 #include "../include/menu.hpp"
 #include "../include/defs.hpp"
 #include "../include/audio.hpp"
+#include "../include/sarge.h"
 #define MINIAUDIO_IMPLEMENTATION
 #include "../include/miniaudio.hpp"
 
@@ -15,9 +16,47 @@ static void clear_window(WINDOW *playerWindow) {
     wrefresh(playerWindow);
 }
 
-int main() {
+int main(int argc, char** argv) {
     WINDOW *menuWindow = nullptr;
     WINDOW *playerWindow = nullptr;
+
+    Sarge sarge;
+
+    sarge.setArgument("h", "help", "Get help.", false);
+    sarge.setArgument("a", "with-audio", "Play the media with audio.", true);
+    sarge.setDescription("C++ program that converts media files such .mp4 into ASCII characters.");
+    sarge.setUsage("sarge_test [options] <video_file>");
+
+    if (!sarge.parseArguments(argc, argv))
+    {
+        std::cerr << "Couldn't parse arguments..." << std::endl;
+        return 1;
+    }
+
+    if (sarge.flagCount() == 0)
+    {
+        sarge.printHelp();
+    }
+
+    if (sarge.exists("help"))
+    {
+        sarge.printHelp();
+    }
+
+    std::string kittens;
+    if (sarge.getFlag("kittens", kittens))
+    {
+        std::cout << "Got kittens: " << kittens << std::endl;
+    }
+
+    std::string textarg;
+    if (sarge.getTextArgument(0, textarg))
+    {
+        std::cout << "Got text argument: " << textarg << std::endl;
+    }
+    else {
+        sarge.printHelp();
+    }
 
     initscr();
     curs_set(0);    // This hides the cursor
@@ -75,10 +114,6 @@ int main() {
             } 
             draw_menu(menuWindow, menuItem);
         } while(key != '\n');
-
-        //std::string density = " :-=+*#%@";
-        std::string density = " ^l!i>~_[}1(|trxncJQ0Zwho#8@";
-        //std::string density = "@8#ohwZ0QJcnxrt|(1}[_~>i!l^ ";
 
         cv::VideoCapture cap;
         cv::Mat frame;
