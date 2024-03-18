@@ -1,5 +1,5 @@
 # media to ASCII
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://shields.io/badge/License-GNU%20General%20Public%20License%20v3.0-green)](LICENSE)
 [![nCurses](https://img.shields.io/badge/nCurses-6.4-red.svg)](https://en.wikipedia.org/wiki/Ncurses/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4-green.svg)](https://opencv.org/)
 [![Linux](https://img.shields.io/badge/Platform-Linux-blue.svg)](https://www.linux.org/)
