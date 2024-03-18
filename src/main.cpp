@@ -5,6 +5,7 @@
 #include "../include/menu.hpp"
 #include "../include/defs.hpp"
 #include "../include/audio.hpp"
+#include "../include/sarge.h"
 #define MINIAUDIO_IMPLEMENTATION
 #include "../include/miniaudio.hpp"
 
@@ -15,9 +16,61 @@ static void clear_window(WINDOW *playerWindow) {
     wrefresh(playerWindow);
 }
 
-int main() {
-    WINDOW *menuWindow = nullptr;
+int main(int argc, char** argv) {
     WINDOW *playerWindow = nullptr;
+    std::string mp3Filepath = "";
+    std::string mp4Filepath = "";
+
+    Sarge sarge;
+
+    sarge.setArgument("h", "help", "Get help.", false);
+    sarge.setArgument("a", "with-audio", "Play the media with audio file.", true);
+    sarge.setDescription("C++ program that converts media files such .mp4 into ASCII characters.");
+    sarge.setUsage("sarge_test [options] <video_file>");
+
+    if (!sarge.parseArguments(argc, argv))
+    {
+        std::cerr << "Couldn't parse arguments..." << std::endl;
+        return 1;
+    }
+
+    if (sarge.exists("help"))
+    {
+        sarge.printHelp();
+        return 1;
+    }
+
+    std::string textarg;
+    if (sarge.getTextArgument(0, textarg))
+    {
+        mp4Filepath = textarg;
+    }
+    else
+    {
+        sarge.printHelp();
+        return 1;
+    }
+
+    if (sarge.getFlag("with-audio", mp3Filepath)) {
+        if (mp3Filepath == "") {
+            sarge.printHelp();
+            return 1;
+        }
+	}
+
+    cv::VideoCapture cap;
+    try {
+        cap.open(mp4Filepath);
+
+        if (!cap.isOpened()) {
+            std::cerr << "Error opening the video file." << std::endl;
+            return 1;
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
 
     initscr();
     curs_set(0);    // This hides the cursor
@@ -33,66 +86,20 @@ int main() {
     getmaxyx(stdscr, height, width);
     
 
-    if((menuWindow = newwin(height, width/4, 0, width - (width/4))) == nullptr) {
-        endwin();   
-        std::cerr << "Error creating the menu window." << std::endl;
-        return 1;
-    }
-    if((playerWindow = newwin(height, width - (width/4), 0, 0)) == nullptr) {
-        delwin(menuWindow);
+    if((playerWindow = newwin(height, width, 0, 0)) == nullptr) {
         endwin();
         std::cerr << "Error creating the player window." << std::endl;
         return 1;
     }
 
-    int key = 0, menuItem = 0;
     char option = '\0';
     bool quit = false;
     while(!quit) {
-        draw_menu(menuWindow, menuItem);
-        keypad(menuWindow, TRUE);
-        noecho();
-        do {
-            key = wgetch(menuWindow);
-            switch(key) {
-            case KEY_DOWN:
-                menuItem++;
-                if(menuItem > MENUMAX-1)
-                    menuItem = 0;
-                break;
-            case KEY_UP:
-                menuItem--;
-                if(menuItem < 0)
-                    menuItem = MENUMAX-1;
-                break;
-            case 'q':
-                delwin(menuWindow);
-                delwin(playerWindow);
-                endwin();
-                return 0;
-            default:
-                break;
-            } 
-            draw_menu(menuWindow, menuItem);
-        } while(key != '\n');
+        keypad(playerWindow, TRUE);
 
-        //std::string density = " :-=+*#%@";
-        std::string density = " ^l!i>~_[}1(|trxncJQ0Zwho#8@";
-        //std::string density = "@8#ohwZ0QJcnxrt|(1}[_~>i!l^ ";
-
-        cv::VideoCapture cap;
         cv::Mat frame;
         int videoHeight = 0, videoWidth = 0;
-        std::string mp3Filepath = "";
 
-        switch(menuItem) {
-        case 0:
-            cap.open("resources/sample.mp4");
-            mp3Filepath = "resources/sample.mp3";
-            break;
-        default:
-            break;
-        }
         wclear(playerWindow);
         wrefresh(playerWindow);
         double fps = cap.get(cv::CAP_PROP_FPS);
@@ -100,8 +107,12 @@ int main() {
         bool once = false;
         int playerWindowHeight, playerWindowWidth;
         getmaxyx(playerWindow, playerWindowHeight, playerWindowWidth);
-        Audio audio(mp3Filepath);
-        audio.play();
+
+        if (mp3Filepath != "") {
+            Audio audio(mp3Filepath);
+            audio.play();
+        }
+
         for(;;) {
             auto start = std::chrono::high_resolution_clock::now();
             cap >> frame;
@@ -122,8 +133,8 @@ int main() {
                 }
             }
             if(!once) {
-                wclear(menuWindow);
-                draw_menu(menuWindow, menuItem);
+                // wclear(menuWindow);
+                // draw_menu(menuWindow, menuItem);
                 once = true;
             }
             refresh();
@@ -131,9 +142,9 @@ int main() {
             auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
             napms(1000 / fps - time_span.count());
 
-            nodelay(menuWindow, true);
-            option = wgetch(menuWindow);
-            nodelay(menuWindow, false);
+            nodelay(playerWindow, true);
+            option = wgetch(playerWindow);
+            nodelay(playerWindow, false);
  
             if(option == 'q' || option == 'Q') {
                 quit = true;
@@ -142,7 +153,7 @@ int main() {
                 break;
             } else if(option == 'm' || option == 'M') {
                 clear_window(playerWindow);
-                draw_menu(menuWindow, menuItem);
+                // draw_menu(menuWindow, menuItem);
                 option = '\0';
                 cap.release();
                 break;
@@ -150,7 +161,7 @@ int main() {
         }
         echo();
     }
-    delwin(menuWindow);
+    // delwin(menuWindow);
     delwin(playerWindow);
     endwin();
 
