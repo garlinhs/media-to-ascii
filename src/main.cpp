@@ -9,11 +9,16 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "../include/miniaudio.hpp"
 
-static void clear_window(WINDOW *playerWindow) {
+static char clear_window(WINDOW *playerWindow) {
     wclear(playerWindow);
     waddstr(playerWindow, "End of the video\n");
-    waddstr(playerWindow, "Please exit or select another video.\n");
+    waddstr(playerWindow, "Please press 'q' to exit\n");
     wrefresh(playerWindow);
+    char option = wgetch(playerWindow);
+    while(option != 'q') {
+        option = wgetch(playerWindow);
+    }
+    return option;
 }
 
 int main(int argc, char** argv) {
@@ -152,9 +157,11 @@ int main(int argc, char** argv) {
                 cap.release();
                 break;
             } else if(option == 'm' || option == 'M') {
-                clear_window(playerWindow);
+                option = clear_window(playerWindow);
+                if(option == 'q') {
+                    quit = true;
+                }
                 // draw_menu(menuWindow, menuItem);
-                option = '\0';
                 cap.release();
                 break;
             }
