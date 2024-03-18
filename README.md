@@ -15,25 +15,25 @@ Before getting started with media-to-ascii, ensure that you have the following d
 
 - **g++ compiler**
 
-    ```
+    ```Bash
     sudo apt install g++
     ```
 
 - **CMake**
 
-    ```
+    ```Bash
     sudo apt install cmake
     ```
 
 - **OpenCV 4**
     
-    ```
+    ```Bash
     sudo apt install libopencv-dev python3-opencv
     ```
 
 - **nCurses 6**
 
-    ```
+    ```Bash
     sudo apt-get install libncurses5-dev libncursesw5-dev
     ```
 
@@ -57,9 +57,15 @@ cmake --build .
 ```
 
 4. Now you will see the executable **media_to_ascii** and you can execute the program
+
+- Without the audio
 ```Bash
-cp -r ../resources .
-./media_to_ascii
+./media_to_ascii ../resource/sample.mp4
+```
+
+- Without the audio
+```Bash
+./media_to_ascii -a ../resource/sample.mp3 ../resource/sample.mp4
 ```
 
 ## Contributing
