@@ -94,7 +94,7 @@ bool Sarge::parseArguments(int argc, char** argv) {
 				// Parse short form flag. Parse all of them sequentially. Only the last one
 				// is allowed to have an additional value following it.
 				entry.erase(0, 1); // Erase the dash.				
-				for (int i = 0; i < entry.length(); ++i) {
+				for (size_t i = 0; i < entry.length(); ++i) {
 					std::string k(&(entry[i]), 1);
 					flag_it = argNames.find(k);
 					if (flag_it == argNames.end()) {
@@ -181,7 +181,7 @@ void Sarge::printHelp() {
 	std::cout << "Options: " << std::endl;
 	
 	// Determine whitespace needed between arg_long and description.
-	int count = 1; 
+	size_t count = 1; 
 	std::vector<std::unique_ptr<Argument> >::const_iterator it;
 	for (it = args.cbegin(); it != args.cend(); ++it) {
 		if ((*it)->arg_long.size() > count) { 

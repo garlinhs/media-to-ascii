@@ -63,7 +63,7 @@ cmake --build .
 ./media_to_ascii ../resource/sample.mp4
 ```
 
-- Without the audio
+- With the audio
 ```Bash
 ./media_to_ascii -a ../resource/sample.mp3 ../resource/sample.mp4
 ```
