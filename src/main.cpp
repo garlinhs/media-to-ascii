@@ -1,8 +1,8 @@
 #include <iostream>
 #include <chrono>
+#include <ncurses.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include "../include/menu.hpp"
 #include "../include/defs.hpp"
 #include "../include/audio.hpp"
 #include "../include/sarge.h"
@@ -138,8 +138,6 @@ int main(int argc, char** argv) {
                 }
             }
             if(!once) {
-                // wclear(menuWindow);
-                // draw_menu(menuWindow, menuItem);
                 once = true;
             }
             refresh();
@@ -161,7 +159,6 @@ int main(int argc, char** argv) {
                 if(option == 'q') {
                     quit = true;
                 }
-                // draw_menu(menuWindow, menuItem);
                 cap.release();
                 break;
             }
