@@ -28,7 +28,6 @@ include_directories(
 add_executable(
     media_to_ascii
     src/main.cpp
-    src/menu.cpp
     src/audio.cpp
     src/helper.cpp
     src/sarge.cpp
