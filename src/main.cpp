@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <thread>
 #include <ncurses.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -8,18 +9,6 @@
 #include "../include/sarge.h"
 #define MINIAUDIO_IMPLEMENTATION
 #include "../include/miniaudio.hpp"
-
-static char clear_window(WINDOW *playerWindow) {
-    wclear(playerWindow);
-    waddstr(playerWindow, "End of the video\n");
-    waddstr(playerWindow, "Please press 'q' to exit\n");
-    wrefresh(playerWindow);
-    char option = wgetch(playerWindow);
-    while(option != 'q') {
-        option = wgetch(playerWindow);
-    }
-    return option;
-}
 
 int main(int argc, char** argv) {
     WINDOW *playerWindow = nullptr;
@@ -122,7 +111,9 @@ int main(int argc, char** argv) {
             auto start = std::chrono::high_resolution_clock::now();
             cap >> frame;
             if(frame.empty()) {
-                clear_window(playerWindow);
+                quit = true;
+                option = '\0';
+                cap.release();
                 break;
             }
             cv::resize(frame, frame, cv::Size(playerWindowWidth, playerWindowHeight));
@@ -154,18 +145,10 @@ int main(int argc, char** argv) {
                 option = '\0';
                 cap.release();
                 break;
-            } else if(option == 'm' || option == 'M') {
-                option = clear_window(playerWindow);
-                if(option == 'q') {
-                    quit = true;
-                }
-                cap.release();
-                break;
             }
         }
         echo();
     }
-    // delwin(menuWindow);
     delwin(playerWindow);
     endwin();
 
