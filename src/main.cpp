@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     sarge.setArgument("h", "help", "Get help.", false);
     sarge.setArgument("a", "with-audio", "Play the media with audio file.", true);
     sarge.setDescription("C++ program that converts media files such .mp4 into ASCII characters.");
-    sarge.setUsage("sarge_test [options] <video_file>");
+    sarge.setUsage("media_to_ascii [options] <video_file>");
 
     if (!sarge.parseArguments(argc, argv))
     {
